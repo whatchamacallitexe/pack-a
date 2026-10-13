@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en" style="width:100%;height:100%;background-color:black;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <meta property="og:locale" content="en-US">
+    <meta property="og:type" content="website">
+
+    <base href="https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/modernclient/">
+
+    <!-- CDN stylesheets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/modernclient/launcher-back.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/modernclient/mobile-addon.min.css">
+
+    <!-- JSZip CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+
+<body id="game_frame" style="margin:0;width:100%;height:100%;overflow:hidden;background-color:black;">
+
+<script>
+(async function () {
+    "use strict";
+
+    const BASE_URL =
+        "https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/modernclient/";
+
+    const BIN_URLS = [
+        new URL("assets/part_1.bin", BASE_URL).href,
+        new URL("assets/part_2.bin", BASE_URL).href
+    ];
+
+    const SCRIPT_PATHS = [
+        "mobile-addon.min.js",
+        "launcher-back.min.js",
+        "loading-background.min.js",
+        "boot1.min.js"
+    ];
+
+    const blobUrls = Object.create(null);
+    const objectUrls = [];
+
+    function normalizePath(path) {
+        return decodeURIComponent(path)
+            .replace(/\\/g, "/")
+            .replace(/^\/+/, "")
+            .replace(/^(?:\.\/)+/, "");
+    }
+
+    function getMimeType(filename) {
+        const extension = filename.split(".").pop().toLowerCase();
+
+        const types = {
+            js: "text/javascript",
+            mjs: "text/javascript",
+            css: "text/css",
+            html: "text/html",
+            htm: "text/html",
+            json: "application/json",
+            svg: "image/svg+xml",
+            webp: "image/webp",
+            png: "image/png",
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            gif: "image/gif",
+            avif: "image/avif",
+            ico: "image/x-icon",
+            mp3: "audio/mpeg",
+            ogg: "audio/ogg",
+            wav: "audio/wav",
+            mp4: "video/mp4",
+            webm: "video/webm",
+            wasm: "application/wasm",
+            woff: "font/woff",
+            woff2: "font/woff2",
+            ttf: "font/ttf",
+            otf: "font/otf"
+        };
+
+        return types[extension] || "application/octet-stream";
+    }
+
+    function registerBlob(path, blob) {
+        const normalized = normalizePath(path);
+        const url = URL.createObjectURL(blob);
+
+        blobUrls[normalized] = url;
+        objectUrls.push(url);
+
+        // Basename fallback for resources referenced without a directory.
+        const basename = normalized.split("/").pop();
+
+        if (!(basename in blobUrls)) {
+            blobUrls[basename] = url;
+        }
+    }
+
+    async function fetchAndCombineZip(urls) {
+        const responses = await Promise.all(
+            urls.map(async function (url) {
+                const response = await fetch(url, {
+                    cache: "no-cache"
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Failed to fetch " + url + ": HTTP " + response.status
+                    );
+                }
+
+                return response.arrayBuffer();
+            })
+        );
+
+        const totalLength = responses.reduce(
+            (total, buffer) => total + buffer.byteLength,
+            0
+        );
+
+        const combined = new Uint8Array(totalLength);
+        let offset = 0;
+
+        for (const buffer of responses) {
+            combined.set(new Uint8Array(buffer), offset);
+            offset += buffer.byteLength;
+        }
+
+        return combined;
+    }
+
+    function rewriteURL(original) {
+        if (typeof original !== "string" || !original) {
+            return original;
+        }
+
+        try {
+            const url = new URL(original, BASE_URL);
+
+            // Leave unrelated external resources untouched.
+            if (url.origin !== new URL(BASE_URL).origin) {
+                return original;
+            }
+
+            const basePath = new URL(BASE_URL).pathname;
+            let path = url.pathname;
+
+            if (path.startsWith(basePath)) {
+                path = path.slice(basePath.length);
+            }
+
+            path = normalizePath(path);
+
+            return blobUrls[path] ||
+                blobUrls[path.split("/").pop()] ||
+                original;
+        } catch {
+            return original;
+        }
+    }
+
+    function installResourceRewriting() {
+        // Rewrite dynamically assigned resource URLs.
+        const descriptors = [
+            [HTMLImageElement.prototype, "src"],
+            [HTMLScriptElement.prototype, "src"],
+            [HTMLLinkElement.prototype, "href"],
+            [HTMLMediaElement.prototype, "src"]
+        ];
+
+        for (const [prototype, property] of descriptors) {
+            const descriptor = Object.getOwnPropertyDescriptor(
+                prototype,
+                property
+            );
+
+            if (!descriptor || !descriptor.set || !descriptor.get) {
+                continue;
+            }
+
+            Object.defineProperty(prototype, property, {
+                configurable: descriptor.configurable,
+                enumerable: descriptor.enumerable,
+
+                get: descriptor.get,
+
+                set(value) {
+                    descriptor.set.call(this, rewriteURL(value));
+                }
+            });
+        }
+
+        // Also handle setAttribute("src", ...) and setAttribute("href", ...).
+        const originalSetAttribute = Element.prototype.setAttribute;
+
+        Element.prototype.setAttribute = function (name, value) {
+            const lowerName = String(name).toLowerCase();
+
+            if (
+                (lowerName === "src" || lowerName === "href") &&
+                typeof value === "string"
+            ) {
+                value = rewriteURL(value);
+            }
+
+            return originalSetAttribute.call(this, name, value);
+        };
+
+        // Rewrite fetch() requests to extracted files when available.
+        const originalFetch = window.fetch;
+
+        window.fetch = function (resource, init) {
+            if (typeof resource === "string" || resource instanceof URL) {
+                resource = rewriteURL(String(resource));
+            } else if (resource instanceof Request) {
+                const rewritten = rewriteURL(resource.url);
+
+                if (rewritten !== resource.url) {
+                    resource = new Request(resource, {
+                        ...init,
+                        // Preserve the original request's settings.
+                        ...{}
+                    });
+
+                    resource = new Request(rewritten, resource);
+                    init = undefined;
+                }
+            }
+
+            return originalFetch.call(this, resource, init);
+        };
+
+        // Rewrite XMLHttpRequest URLs.
+        const originalOpen = XMLHttpRequest.prototype.open;
+
+        XMLHttpRequest.prototype.open = function (method, url, ...args) {
+            return originalOpen.call(
+                this,
+                method,
+                rewriteURL(String(url)),
+                ...args
+            );
+        };
+
+        // Rewrite audio loaded through new Audio(url).
+        const OriginalAudio = window.Audio;
+
+        window.Audio = new Proxy(OriginalAudio, {
+            construct(target, args) {
+                const rewrittenArgs = args.slice();
+
+                if (typeof rewrittenArgs[0] === "string") {
+                    rewrittenArgs[0] = rewriteURL(rewrittenArgs[0]);
+                }
+
+                return Reflect.construct(target, rewrittenArgs);
+            }
+        });
+    }
+
+    async function loadScriptsSequentially(paths) {
+        for (const path of paths) {
+            await new Promise(function (resolve, reject) {
+                const script = document.createElement("script");
+
+                script.src = new URL(path, BASE_URL).href;
+                script.async = false;
+
+                script.onload = resolve;
+
+                script.onerror = function () {
+                    reject(new Error("Failed to load script: " + path));
+                };
+
+                document.head.appendChild(script);
+            });
+        }
+
+        if (typeof window.start3 === "function") {
+            window.start3();
+        } else {
+            console.warn(
+                "The scripts loaded, but window.start3 is not available."
+            );
+        }
+    }
+
+    try {
+        if (!window.JSZip) {
+            throw new Error("JSZip did not load from its CDN.");
+        }
+
+        console.log("Fetching ZIP parts...");
+
+        const bytes = await fetchAndCombineZip(BIN_URLS);
+        const zip = await JSZip.loadAsync(bytes);
+
+        console.log("Extracting ZIP resources...");
+
+        const entries = Object.entries(zip.files);
+
+        for (const [filename, file] of entries) {
+            if (file.dir) {
+                continue;
+            }
+
+            const normalized = normalizePath(filename);
+            const data = await file.async("uint8array");
+
+            const blob = new Blob([data], {
+                type: getMimeType(normalized)
+            });
+
+            registerBlob(normalized, blob);
+        }
+
+        console.log(
+            "Extracted " + Object.keys(blobUrls).length + " resource entries."
+        );
+
+        installResourceRewriting();
+
+        await loadScriptsSequentially(SCRIPT_PATHS);
+
+        console.log("Launcher initialization completed.");
+    } catch (error) {
+        console.error("Launcher initialization failed:", error);
+
+        document.body.innerHTML = "";
+
+        const message = document.createElement("pre");
+
+        message.style.cssText =
+            "color:#ff7777;background:#000;padding:20px;" +
+            "font:14px monospace;white-space:pre-wrap;overflow:auto;";
+
+        message.textContent =
+            "Failed to initialize the launcher.\n\n" +
+            error.message +
+            "\n\nCheck the browser's network and console errors.";
+
+        document.body.appendChild(message);
+    }
+
+    // Keep blob URLs alive for the lifetime of the page.
+    window.addEventListener("pagehide", function () {
+        for (const url of objectUrls) {
+            URL.revokeObjectURL(url);
+        }
+    }, { once: true });
+
+})();
+</script>
+
+</body>
+</html>
