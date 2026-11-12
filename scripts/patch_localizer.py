@@ -128,8 +128,8 @@ def main() -> int:'''
 text = text.replace("def main() -> int:", ruffle_fn, 1)
 text = text.replace(
     '    page.write_text(text, encoding="utf-8")\n\n    for css in game.rglob("*.css"):',
-    '    if "ruffle-object" in text and "ruffle-object{display" not in text:\n'
-    '        text = text.replace("</head>", "<style>html,body{height:100%;margin:0}ruffle-object{display:block;height:100vh}</style></head>")\n'
+    '    if ("<object" in text or "<embed" in text or "ruffle-object" in text) and "html,body{height:100%" not in text:\n'
+    '        text = text.replace("</head>", "<style>html,body{height:100%;margin:0}object,embed,ruffle-object{display:block;width:100%;height:100vh}</style></head>")\n'
     '    page.write_text(text, encoding="utf-8")\n\n    for css in game.rglob("*.css"):',
 )
 text = text.replace(
