@@ -1,0 +1,413 @@
+html,
+body {
+  height: 100%;
+  width: 99.55%;
+  background-color: rgb(16, 16, 16);
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  border-color: yellow;
+}
+
+h1 {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 330%;
+  color: yellow;
+
+}
+
+h2 {
+  color: yellow;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 280%;
+}
+
+h3 {
+  color: yellow;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 280%;
+  margin-top: 30px;
+  margin-left: 190px;
+}
+
+h4 {
+  color: yellow;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 180%;
+  margin-top: 30px;
+  margin-left: 190px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+h5 {
+  color: white;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 120%;
+  margin: 20px auto 0;
+}
+
+h6 {
+  color: yellow;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 280%;
+  margin: 30px auto 0;
+}
+
+.container2 {
+  display: flex;
+  flex-direction: column;
+}
+
+p1 {
+  color: #ffffff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 150%;
+  font-weight: 700;
+}
+
+p2 {
+  color: #ffffff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 150%;
+  font-weight: 700;
+  margin-top: 150px;
+  margin-left: -200px;
+}
+
+p3 {
+  color: #ffffff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 150%;
+  font-weight: 700;
+  margin-top: 230px;
+  margin-left: -135px;
+}
+
+p4 {
+  color: #ffffff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 150%;
+  font-weight: 700;
+  margin-top: 95px;
+  margin-left: -150px;
+  display: flex;
+}
+
+p5 {
+  color: #ffffff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 150%;
+  font-weight: 700;
+  margin-top: 230px;
+  margin-left: -135px;
+}
+
+#tooltip {
+  position: absolute;
+  background-color: rgba(29, 29, 29, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0;
+}
+
+.discord-button {
+  position: absolute;
+  left: 93.5%;
+  top: 10px;
+  transform: translateX(-50%);
+  transition: transform 0.15s;
+}
+
+.discord-button:hover {
+  transform: translateX(-50%) scale(1.1);
+  cursor: pointer;
+}
+
+.discord-button:active {
+  transform: translateX(-50%) scale(0.9);
+  cursor: pointer;
+}
+
+
+button {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 22px;
+  transition: background-color 0.3s, transform 0.15s;
+}
+
+button:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+button:active {
+  background-color: #232424;
+  transform: scale(0.95);
+}
+
+#settingsmenu {
+  width: 550px;
+  height: 450px;
+  background-color: rgba(29, 29, 27, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#updatelogmenu {
+  width: 570px;
+  height: 520px;
+  background-color: rgba(29, 29, 27, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#statsmenu {
+  width: 500px;
+  height: 450px;
+  background-color: rgba(29, 29, 27, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#resetmenu {
+  width: 650px;
+  height: 200px;
+  background-color: rgba(29, 29, 27, 1);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 13.5%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#highscorebutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 22px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 5vh;
+  width: 7vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: 2.5%;
+  margin-top: 25.7%;
+}
+
+#highscorebutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#highscorebutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}
+
+#rebirthbutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 22px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 4.5vh;
+  width: 32vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: -45%;
+  margin-top: 57%;
+  white-space: nowrap;
+}
+
+#rebirthbutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#rebirthbutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}
+
+#rebirthscorebutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 22px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 5vh;
+  width: 7vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: -11.8%;
+  margin-top: 40.5%;
+}
+
+#rebirthscorebutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#rebirthscorebutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}
+
+#resetbutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 22px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 4.5vh;
+  width: 20vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: -43%;
+  margin-top: 67%;
+  white-space: nowrap;
+}
+
+#resetbutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#resetbutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}
+
+/* yes and no options */
+
+#yesbutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 35px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 5.1vh;
+  width: 7.5vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: 37.5%;
+  margin-top: 21%;
+  display: flex;
+  position: absolute;
+}
+
+#yesbutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#yesbutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}
+
+#nobutton {
+  background-color: #373434;
+  color: #ffffff;
+  font-weight: 600;
+  font-family:'Quicksand',sans-serif;
+  border-radius: 6px;
+  border: none;
+  font-size: 35px;
+  transition: background-color 0.3s, transform 0.15s;
+  height: 5.1vh;
+  width: 7.5vh;
+  position: relative;
+  transform-origin: center;
+  margin-left: 51%;
+  margin-top: 21%;
+  white-space: nowrap;
+  position: absolute;
+}
+
+#nobutton:hover {
+  transform: scale(1.1);
+  background-color: #303434;
+  cursor: pointer;
+}
+
+#nobutton:active {
+  background-color: #232424;
+  transform: scale(0.98);
+}

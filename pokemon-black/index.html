@@ -37,7 +37,7 @@
       }
     </style>
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap"
+      href="assets/cdn/b3879e55-fonts-b3879e5526.css"
       rel="stylesheet"
     />
     <style type="text/css">
@@ -83,7 +83,7 @@
         EJS_core = "nds";
         EJS_color = "#000000";
         EJS_startOnLoaded = true;
-        EJS_pathtodata = "https://cdn.jsdelivr.net/gh/bubblfan/emu@master/";
+        EJS_pathtodata = "../_shared/emu/";
         EJS_gameUrl =
           "https://bbcdn.githack.com/jnfdk/redpalmer/raw/7e1539c9f6303905e09e7b52fd1780790223b8fd/pmb.nds";
         loadGame();
@@ -94,11 +94,11 @@
       function loadGame() {
         var script = document.createElement("script");
         script.src =
-          "https://cdn.jsdelivr.net/gh/bubblfan/emu@master/loader.js";
+          "../_shared/emu/loader.js";
         document.body.appendChild(script);
         var script = document.createElement("script");
         script.src =
-          "https://cdn.jsdelivr.net/gh/a456pur/seraph@ae2fcc6d6a9cd051654fcc0519080db1f79cf2a7/storage/js/cloak.js";
+          "assets/cdn/cccb2f51-cloak.js";
         document.body.appendChild(script);
       }
     </script>

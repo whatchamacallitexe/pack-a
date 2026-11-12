@@ -1,0 +1,23 @@
+EMU OK bubblfan/emu@master cores=melonds,mgba
+FILE backyard-football: https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@e5e6e99b6ba28ba870524cfab353331822a9b181/Backyard%20Football%20(USA).zip -> assets/cdn/9316e850-Backyard_Football_USA_.zip
+BASE OK thirstygithub/mathamatic-notes@master/. -> balatro
+BASE REWRITE balatro
+FILE ballandbrick: https://cdn.jsdelivr.net/gh/bubbls/ruffle@cb9c5cd6a1fe0b07adf5a80f58098808189ff4cb/normalize.css -> assets/cdn/68c00dea-normalize.css
+FILE ballandbrick: https://cdn.jsdelivr.net/gh/bubbls/ruffle@cb9c5cd6a1fe0b07adf5a80f58098808189ff4cb/game.css -> assets/cdn/d53cdbfe-game.css
+FILE ballandbrick: https://cdn.jsdelivr.net/gh/bubbls/ruffle@cb9c5cd6a1fe0b07adf5a80f58098808189ff4cb/jsg.js -> assets/cdn/b7da5ce1-jsg.js
+FILE ballandbrick: https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js -> assets/cdn/bd41ea11-api.js
+FILE banannasim: https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/bananasim.png -> assets/cdn/e3995377-bananasim.png
+FILE banannasim: https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/banacss.css -> assets/cdn/f4fb15f7-banacss.css
+FILE banannasim: https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/settings.png -> assets/cdn/bb8ecefa-settings.png
+FILE banannasim: https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/stats.png -> assets/cdn/f44ee2b2-stats.png
+FILE banannasim: https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/script.js -> assets/cdn/4838a339-script.js
+BASE OK Luts91/Luts91.github.io@master/idle-dices -> idle-dice
+BASE REWRITE idle-dice
+BASE OK bubbls/UGS-Assets@main/idle-football-manager -> idlefootball
+BASE REWRITE idlefootball
+BASE OK cooldude2349/everything@main/modernclient -> modernclient
+BASE REWRITE modernclient
+FILE modernclient: https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js -> assets/cdn/f73ff298-jszip.min.js
+FILE pokemon-black: https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap -> assets/cdn/b3879e55-fonts-b3879e5526.css
+FILE pokemon-black: https://cdn.jsdelivr.net/gh/a456pur/seraph@ae2fcc6d6a9cd051654fcc0519080db1f79cf2a7/storage/js/cloak.js -> assets/cdn/cccb2f51-cloak.js
+FILE polybranch: http://fonts.googleapis.com/css?family=Wire+One -> assets/cdn/b8e14e64-fonts-b8e14e6483.css

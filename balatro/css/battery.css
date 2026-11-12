@@ -1,0 +1,49 @@
+.power-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #223d3d;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  font-family: system-ui, -apple-system, sans-serif;
+  border: 1px solid #444;
+}
+
+.battery-container {
+  width: 24px;
+  height: 12px;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  position: relative;
+  background: transparent;
+}
+
+.battery-tip {
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  width: 2px;
+  height: 6px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.battery-bar {
+  height: 100%;
+  width: 0%; 
+  border-radius: 1px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  background-color: #4ade80;
+}
+
+#power-text {
+  font-weight: 500;
+  white-space: nowrap;
+}

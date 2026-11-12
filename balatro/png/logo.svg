@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/png" href="/png/logo.svg"/>
+      <title>Truffled | 404</title>
+      <meta name="title" content="Truffled - 404">
+      <meta name="description" content="BEEP BOOP YOUR WRONG FOR BEING HERE!!">
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://truffled.lol/404">
+      <meta property="og:title" content="Truffled - 404">
+      <meta property="og:description" content="BEEP BOOP YOUR WRONG FOR BEING HERE!!">
+      <meta property="og:image" content="https://truffled.lol/png/logo.png">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:url" content="https://truffled.lol/404">
+      <meta name="twitter:title" content="Truffled - 404">
+      <meta name="twitter:description" content="BEEP BOOP YOUR WRONG FOR BEING HERE!!">
+      <meta name="twitter:image" content="https://truffled.lol/png/logo.png">
+      <link rel="canonical" href="https://truffled.lol/404">
+      <link rel="stylesheet" href="css/battery.css">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="/css/404.css">
+   </head>
+   <body>
+      <div class="content">
+         <h1>Page Not Found</h1>
+         <p>you may be seeing this if you went on a broken game or searched the proxy the first time, search again but join discord and request a bug if you find a broken game!</p>
+         <div class="button-container">
+            <button onclick="history.back()">Go Back</button>
+         </div>
+      </div>
+      </div>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-WLTG1S4STB"></script>
+      <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', 'G-WLTG1S4STB');
+      </script>
+      <script src="/js/panic.js"></script>
+      <script src="/js/right.js"></script>
+      <script>
+         let userInteracted = false;
+         document.addEventListener('click', () => userInteracted = true);
+         document.addEventListener('keydown', () => userInteracted = true);
+         document.addEventListener('mousemove', () => userInteracted = true);
+
+         window.addEventListener('beforeunload', function (e) {
+         if (!userInteracted) return; 
+         e.preventDefault();
+         e.returnValue = ""; 
+         });
+      </script>
+   </body>
+</html>
