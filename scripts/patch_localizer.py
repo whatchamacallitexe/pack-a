@@ -2,6 +2,7 @@ from pathlib import Path
 
 script = Path(__file__).with_name("localize_cdn.py")
 text = script.read_text(encoding="utf-8")
+text = text.replace("import urllib.parse\n", "import urllib.parse\nimport urllib.request\n")
 old = '''        for item in src.iterdir():
             if item.name in (".git", "index.html"):
                 continue
