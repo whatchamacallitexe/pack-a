@@ -31,6 +31,7 @@ if old in text:
 old_emu = r'''EMU_RE = re.compile(r"https://cdn\.jsdelivr\.net/gh/(?:bubblfan|genizy)/emu@[^/\"'\s<>)]+/")'''
 new_emu = r'''EMU_RE = re.compile(r"EJS_pathtodata\s*=\s*[\"'](https://cdn\.jsdelivr\.net/gh/[^\"']+/?)[\"']")'''
 text = text.replace(old_emu, new_emu)
+text = text.replace("if size > 120 * 1024 * 1024:", "if size > 60 * 1024 * 1024:")
 text = text.replace(
     '        log.append(f"EMU OK {owner}/{repo}@{ref} cores=',
     '        if not (engine / "loader.js").exists():\n'
