@@ -238,12 +238,13 @@ def mirror_github(owner: str, repo: str, ref: str, subdir: str, game: Path) -> b
             log.append(f"BASE SKIP {size / 1048576:.1f}MB {owner}/{repo}@{ref}/{subdir}")
             return False
         game.mkdir(parents=True, exist_ok=True)
+        ignore = shutil.ignore_patterns(".git", ".github", ".DS_Store", "*.html", "*.htm")
         for item in src.iterdir():
-            if item.name in (".git", "index.html"):
+            if item.name in (".git", ".github", ".DS_Store") or item.suffix.lower() in (".html", ".htm"):
                 continue
             dst = game / item.name
             if item.is_dir():
-                shutil.copytree(item, dst, dirs_exist_ok=True)
+                shutil.copytree(item, dst, dirs_exist_ok=True, ignore=ignore)
             else:
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(item, dst)
