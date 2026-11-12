@@ -37,6 +37,19 @@ text = text.replace(
     '    ".js", ".mjs", ".css", ".json", ".wasm", ".data", ".bin", ".mem", ".symbols",\n    ".html", ".htm",',
 )
 text = text.replace(
+    '    "fonts.googleapis.com",\n    "fonts.gstatic.com",\n)',
+    '    "fonts.googleapis.com",\n    "fonts.gstatic.com",\n    "rawcdn.githack.com",\n    "bbcdn.githack.com",\n    "raw.githubusercontent.com",\n)',
+)
+text = text.replace(
+    '    "kizi", "sdk.crazygames.com", "githack.com", "raw.githubusercontent.com",\n    "github.com", "docs.google.com",',
+    '    "kizi", "sdk.crazygames.com",\n    "github.com", "docs.google.com",',
+)
+text = text.replace(
+    '    parts = urllib.parse.urlsplit(url)\n    path = urllib.parse.unquote(parts.path)\n    q = urllib.parse.parse_qs(parts.query)',
+    '    parts = urllib.parse.urlsplit(url)\n    host = parts.netloc.lower()\n    path = urllib.parse.unquote(parts.path)\n    if host.endswith("githack.com") or host == "raw.githubusercontent.com":\n        bits = path.strip("/").split("/", 3)\n        if len(bits) == 4:\n            owner, repo, ref, subdir = bits\n            return mirror_github(owner, repo, ref, subdir.rstrip("/"), game)\n        return False\n    q = urllib.parse.parse_qs(parts.query)',
+)
+text = text.replace('text = text.replace(emu, "../_shared/emu/")', 'text = text.replace(emu, rel_for(SHARED / "emu", page) + "/")')
+text = text.replace(
     '        log.append(f"EMU OK {owner}/{repo}@{ref} cores=',
     '        if not (engine / "loader.js").exists():\n'
     '            log.append(f"EMU MISS {owner}/{repo}@{ref}")\n'
