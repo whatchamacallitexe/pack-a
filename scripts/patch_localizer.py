@@ -57,11 +57,6 @@ text = text.replace(
     '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)/?", emu_url)',
     '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)(?:/(.*?))?/?$", emu_url)',
 )
-if '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)(?:/(.*?))?/?$", emu_url)' not in text:
-    text = text.replace(
-        '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)/?", emu_url)',
-        '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)(?:/(.*?))?/?$", emu_url)',
-    )
 text = text.replace('    owner, repo, ref = m.groups()', '    owner, repo, ref, subdir = m.groups()\n    base = None')
 text = text.replace('        engine.mkdir(parents=True, exist_ok=True)', '        base = tmp / subdir if subdir else tmp\n        engine.mkdir(parents=True, exist_ok=True)')
 text = text.replace('            src = tmp / name', '            src = base / name')
@@ -94,4 +89,8 @@ new_loop = '''    for emu in set(EMU_RE.findall(text)):
             tail = raw[len(emu):] if raw.startswith(emu) else ""
             text = text.replace(raw, rel_for(SHARED / "emu", page) + "/" + tail)'''
 text = text.replace(old_loop, new_loop)
+text = text.replace(
+    '        if "_shared" not in p.parts and ".git" not in p.parts',
+    '        if ".git" not in p.parts and ("_shared" not in p.parts or p.parent == SHARED)',
+)
 script.write_text(text, encoding="utf-8")
