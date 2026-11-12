@@ -50,6 +50,10 @@ text = text.replace(
 )
 text = text.replace('text = text.replace(emu, "../_shared/emu/")', 'text = text.replace(emu, rel_for(SHARED / "emu", page) + "/")')
 text = text.replace(
+    '    return ext_of(url) in STATIC_EXTS or host == "fonts.googleapis.com"',
+    '    return ext_of(url) in STATIC_EXTS or host in ("fonts.googleapis.com", "unpkg.com")',
+)
+text = text.replace(
     '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)/?", emu_url)',
     '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)(?:/(.*?))?/?$", emu_url)',
 )
