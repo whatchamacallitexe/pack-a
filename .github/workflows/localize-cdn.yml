@@ -16,6 +16,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Patch localizer for this repo
+        run: python3 scripts/patch_localizer.py
+
       - name: Copy CDN files into the repo and rewrite game pages
         run: python3 scripts/localize_cdn.py
 
