@@ -50,6 +50,18 @@ text = text.replace(
 )
 text = text.replace('text = text.replace(emu, "../_shared/emu/")', 'text = text.replace(emu, rel_for(SHARED / "emu", page) + "/")')
 text = text.replace(
+    '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)/?", emu_url)',
+    '    m = re.match(r"https://cdn\\.jsdelivr\\.net/gh/([^/]+)/([^@]+)@([^/]+)(?:/(.*?))?/?$", emu_url)',
+)
+text = text.replace('    owner, repo, ref = m.groups()', '    owner, repo, ref, subdir = m.groups()\n    base = None')
+text = text.replace('        engine.mkdir(parents=True, exist_ok=True)', '        base = tmp / subdir if subdir else tmp\n        engine.mkdir(parents=True, exist_ok=True)')
+text = text.replace('            src = tmp / name', '            src = base / name')
+text = text.replace('        core_dir = tmp / "cores"', '        core_dir = base / "cores"')
+text = text.replace(
+    '            log.append(f"EMU MISS {owner}/{repo}@{ref}")\n            return False',
+    '            log.append(f"EMU MISS {owner}/{repo}@{ref}/{subdir or \'\'}")\n            shutil.rmtree(engine, ignore_errors=True)\n            return False',
+)
+text = text.replace(
     '        log.append(f"EMU OK {owner}/{repo}@{ref} cores=',
     '        if not (engine / "loader.js").exists():\n'
     '            log.append(f"EMU MISS {owner}/{repo}@{ref}")\n'
