@@ -93,4 +93,33 @@ text = text.replace(
     '        if "_shared" not in p.parts and ".git" not in p.parts',
     '        if ".git" not in p.parts and ("_shared" not in p.parts or p.parent == SHARED)',
 )
+ruffle_fn = '''def fix_ruffle_engine() -> None:
+    wrappers = list(SHARED.glob("*ruffle*.js"))
+    if not wrappers:
+        return
+    version = "0.7.1"
+    try:
+        with urllib.request.urlopen(f"https://unpkg.com/@ruffle-rs/ruffle@{version}/ruffle.js", timeout=60) as r:
+            ruffle = r.read()
+    except Exception as e:
+        log.append(f"RUFFLE FAIL {e}")
+        return
+    for wrapper in wrappers:
+        wrapper.write_bytes(ruffle)
+    for h in ("16d61072ac7fdc4d5013", "994eeef0a471a88cd0e3"):
+        dest = SHARED / f"core.ruffle.{h}.js"
+        try:
+            with urllib.request.urlopen(f"https://unpkg.com/@ruffle-rs/ruffle@{version}/core.ruffle.{h}.js", timeout=60) as r:
+                dest.write_bytes(r.read())
+        except Exception as e:
+            log.append(f"RUFFLE CORE FAIL {h}: {e}")
+    log.append(f"RUFFLE OK {len(wrappers)} wrappers")
+
+
+def main() -> int:'''
+text = text.replace("def main() -> int:", ruffle_fn, 1)
+text = text.replace(
+    '    (ROOT / "cdn-localize-report.txt").write_text',
+    '    fix_ruffle_engine()\n    (ROOT / "cdn-localize-report.txt").write_text',
+)
 script.write_text(text, encoding="utf-8")
