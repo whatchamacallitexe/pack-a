@@ -127,6 +127,12 @@ ruffle_fn = '''def fix_ruffle_engine() -> None:
 def main() -> int:'''
 text = text.replace("def main() -> int:", ruffle_fn, 1)
 text = text.replace(
+    '    page.write_text(text, encoding="utf-8")\n\n    for css in game.rglob("*.css"):',
+    '    if "ruffle-object" in text and "ruffle-object{display" not in text:\n'
+    '        text = text.replace("</head>", "<style>html,body{height:100%;margin:0}ruffle-object{display:block;height:100vh}</style></head>")\n'
+    '    page.write_text(text, encoding="utf-8")\n\n    for css in game.rglob("*.css"):',
+)
+text = text.replace(
     '    (ROOT / "cdn-localize-report.txt").write_text',
     '    fix_ruffle_engine()\n    (ROOT / "cdn-localize-report.txt").write_text',
 )
