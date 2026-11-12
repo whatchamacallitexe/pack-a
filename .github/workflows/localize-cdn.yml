@@ -2,6 +2,7 @@ name: Localize CDN assets
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: write
@@ -9,18 +10,30 @@ permissions:
 jobs:
   localize:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
-      - name: Checkout
+      - name: Checkout target repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Patch localizer for this repo
-        run: python3 scripts/patch_localizer.py
+      - name: Prepare localizer tools
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/cdn-tools
+          mkdir -p /tmp/cdn-tools
+          if [ -f scripts/localize_cdn.py ]; then
+            cp scripts/localize_cdn.py scripts/patch_localizer.py /tmp/cdn-tools/
+          else
+            git clone --depth 1 --filter=blob:none --sparse \
+              https://github.com/whatchamacallitexe/pack-a.git /tmp/cdn-tools
+            git -C /tmp/cdn-tools sparse-checkout set scripts
+            cp /tmp/cdn-tools/scripts/localize_cdn.py /tmp/cdn-tools/scripts/patch_localizer.py /tmp/cdn-tools/
+          fi
+          python3 /tmp/cdn-tools/patch_localizer.py
 
       - name: Copy CDN files into the repo and rewrite game pages
-        run: python3 scripts/localize_cdn.py
+        run: python3 /tmp/cdn-tools/localize_cdn.py "$GITHUB_WORKSPACE"
 
       - name: Commit and push
         run: |

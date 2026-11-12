@@ -21,5 +21,10 @@ new = '''        ignore = shutil.ignore_patterns(".git", ".github", ".DS_Store",
             else:
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(item, dst)'''
+text = text.replace(
+    'ROOT = Path(__file__).resolve().parent.parent',
+    'ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent',
+)
 if old in text:
-    script.write_text(text.replace(old, new), encoding="utf-8")
+    text = text.replace(old, new)
+script.write_text(text, encoding="utf-8")
