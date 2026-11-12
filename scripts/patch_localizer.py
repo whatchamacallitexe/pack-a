@@ -27,4 +27,15 @@ text = text.replace(
 )
 if old in text:
     text = text.replace(old, new)
+
+old_emu = r'''EMU_RE = re.compile(r"https://cdn\.jsdelivr\.net/gh/(?:bubblfan|genizy)/emu@[^/\"'\s<>)]+/")'''
+new_emu = r'''EMU_RE = re.compile(r"EJS_pathtodata\s*=\s*[\"'](https://cdn\.jsdelivr\.net/gh/[^\"']+/?)[\"']")'''
+text = text.replace(old_emu, new_emu)
+text = text.replace(
+    '        log.append(f"EMU OK {owner}/{repo}@{ref} cores=',
+    '        if not (engine / "loader.js").exists():\n'
+    '            log.append(f"EMU MISS {owner}/{repo}@{ref}")\n'
+    '            return False\n'
+    '        log.append(f"EMU OK {owner}/{repo}@{ref} cores=',
+)
 script.write_text(text, encoding="utf-8")
