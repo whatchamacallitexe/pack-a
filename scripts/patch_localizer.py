@@ -114,6 +114,13 @@ ruffle_fn = '''def fix_ruffle_engine() -> None:
                 dest.write_bytes(r.read())
         except Exception as e:
             log.append(f"RUFFLE CORE FAIL {h}: {e}")
+    for w in ("172de42e6619eac8f371", "878d548199cddef07035"):
+        dest = SHARED / f"{w}.wasm"
+        try:
+            with urllib.request.urlopen(f"https://unpkg.com/@ruffle-rs/ruffle@{version}/{w}.wasm", timeout=60) as r:
+                dest.write_bytes(r.read())
+        except Exception as e:
+            log.append(f"RUFFLE WASM FAIL {w}: {e}")
     log.append(f"RUFFLE OK {len(wrappers)} wrappers")
 
 
