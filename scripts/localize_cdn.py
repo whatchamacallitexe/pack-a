@@ -22,7 +22,7 @@ import tempfile
 import urllib.parse
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 SHARED = ROOT / "_shared"
 CDN_HOSTS = (
     "cdn.jsdelivr.net",
@@ -58,7 +58,7 @@ BASE_RE = re.compile(r"<base\s+[^>]*href\s*=\s*[\"']([^\"']+)[\"'][^>]*>", re.I)
 CSS_URL_RE = re.compile(r"url\(\s*([\"']?)(https?://[^)\"']+)\1\s*\)", re.I)
 CSS_IMPORT_RE = re.compile(r"@import\s+(?:url\(\s*)?[\"']?(https?://[^)\"';]+)", re.I)
 COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
-EMU_RE = re.compile(r"https://cdn\.jsdelivr\.net/gh/(?:bubblfan|genizy)/emu@[^/\"'\s<>)]+/")
+EMU_RE = re.compile(r"EJS_pathtodata\s*=\s*[\"'](https://cdn\.jsdelivr\.net/gh/[^\"']+/?)[\"']")
 CORE_RE = re.compile(r"EJS_core\s*=\s*[\"']([^\"']+)")
 CORE_PREFIXES = {
     "nes": ["fceumm"], "snes": ["snes9x"], "n64": ["mupen64plus_next"],
@@ -114,6 +114,15 @@ def digest(url: str) -> str:
     return hashlib.sha1(url.encode()).hexdigest()[:12]
 
 
+def jsdelivr_raw(url: str) -> str | None:
+    """GitHub raw fallback for jsDelivr packages blocked by its 50 MB limit."""
+    m = re.match(r"https://cdn\.jsdelivr\.net/gh/([^/]+)/([^@/]+)@([^/]+)/(.+)$", url)
+    if not m:
+        return None
+    owner, repo, ref, path = m.groups()
+    return f"https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}"
+
+
 def fetch(url: str, dest: Path) -> bool:
     """Download one URL. Returns False for oversized/failed downloads."""
     if dest.exists() and dest.stat().st_size:
@@ -130,9 +139,19 @@ def fetch(url: str, dest: Path) -> bool:
     try:
         run(cmd)
     except subprocess.CalledProcessError as e:
-        tmp.unlink(missing_ok=True)
-        log.append(f"FAILED {url}: {str(e.stdout)[-300:]}")
-        return False
+        raw = jsdelivr_raw(url)
+        if raw:
+            cmd[-1] = raw
+            try:
+                run(cmd)
+            except subprocess.CalledProcessError as raw_error:
+                tmp.unlink(missing_ok=True)
+                log.append(f"FAILED {url}: {str(raw_error.stdout)[-300:]}")
+                return False
+        else:
+            tmp.unlink(missing_ok=True)
+            log.append(f"FAILED {url}: {str(e.stdout)[-300:]}")
+            return False
     size = tmp.stat().st_size
     if size > MAX_BYTES:
         tmp.unlink(missing_ok=True)
@@ -321,6 +340,9 @@ def prepare_emu(emu_url: str, pages: list[Path]) -> bool:
             reports = core_dir / "reports"
             if reports.is_dir():
                 shutil.copytree(reports, engine / "cores" / "reports", dirs_exist_ok=True)
+        if not (engine / "loader.js").exists():
+            log.append(f"EMU MISS {owner}/{repo}@{ref}")
+            return False
         log.append(f"EMU OK {owner}/{repo}@{ref} cores={','.join(sorted(cores)) or 'mgba'}")
         return True
     except subprocess.CalledProcessError as e:
